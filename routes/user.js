@@ -3,7 +3,6 @@ const _ = require("lodash");
 const express = require("express");
 const router = express.Router();
 const { User, validation, genToken } = require("../models/user");
-// const validateObjId = require("../middleware/validateObjectId");
 const fs = require("fs");
 
 //creating new user account
