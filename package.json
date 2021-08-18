@@ -1,0 +1,14 @@
+{
+  "name": "twitter-backend-restapi",
+  "version": "1.0.0",
+  "description": "twitter clone REST api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gagandeep Raju",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
