@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello from twitter server");
-});
+require("./startup/cors")(app);
+require("./startup/routes")(app);
+require("./startup/db")();
+require("./startup/config.js")();
 
 const port = process.env.PORT || 3000;
 

@@ -1,0 +1,4 @@
+{
+    "jwtPrivateKey": "twitter_jwtPrivateKey",
+    "db": "twitter_db"
+}

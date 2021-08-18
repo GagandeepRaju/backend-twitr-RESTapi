@@ -1,0 +1,6 @@
+{
+    "jwtPrivateKey": "unsecureKey",
+    "db": "mongodb://localhost/twitter",
+    "port": "3100",
+    "requiresAuth": true
+}
