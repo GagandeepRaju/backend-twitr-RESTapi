@@ -6,4 +6,5 @@ module.exports = function (app) {
   app.use(express.json());
   app.use("/api/signup", user);
   app.use("/api/login", login);
+  app.use("/api/homepage", homepage);
 };
