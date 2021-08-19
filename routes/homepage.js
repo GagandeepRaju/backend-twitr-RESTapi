@@ -9,14 +9,12 @@ const { Tweets } = require("../models/tweets");
 
 //add comment
 router.put("/addcomment", [auth], async (req, res) => {
-  //
-
   const { tweetId, text } = req.body;
-  const tweetedBy = req.user._id;
+  const postedBy = req.user._id;
   try {
     const tweet = await Tweets.findByIdAndUpdate(
       tweetId,
-      { $push: { comments: { text: text, tweetedBy: tweetedBy } } },
+      { $push: { comments: { text: text, postedBy: postedBy } } },
       { new: true }
     );
     res.status(200).send(tweet);
@@ -77,12 +75,12 @@ router.put("/removelike/:userid", [auth, validateObjId], async (req, res) => {
 });
 
 //Add tweet
-router.tweet("/addtweet/:userid", [auth, validateObjId], async (req, res) => {
+router.post("/addtweet/:userid", [auth, validateObjId], async (req, res) => {
   //
   const user = await User.findOne({ _id: req.params.userid });
   if (!user) return res.status(400).send("Cannot find User");
   try {
-    let tweet = new Tweets(_.pick(req.body, ["text", "tweetedBy"]));
+    let tweet = new Tweets(_.pick(req.body, ["text", "postedBy"]));
     const result = await tweet.save();
     res.status(200).send(result);
   } catch (ex) {
@@ -111,17 +109,17 @@ router.delete(
 );
 
 //get all Tweets
-router.get("/allTweets/:tweetedBy", async (req, res) => {
+router.get("/allTweets/:postedBy", async (req, res) => {
   //
-  let { following } = await User.findById(req.params.tweetedBy).select(
+  let { following } = await User.findById(req.params.postedBy).select(
     "following"
   );
-  const { tweetedBy } = req.params;
-  following.push(req.params.tweetedBy);
+  const { postedBy } = req.params;
+  following.push(req.params.postedBy);
   try {
-    const Tweets = await Tweets.find({ tweetedBy: { $in: following } })
-      .populate("comments.tweetedBy", "_id name")
-      .populate("tweetedBy", "_id name")
+    const Tweets = await Tweets.find({ postedBy: { $in: following } })
+      .populate("comments.postedBy", "_id name")
+      .populate("postedBy", "_id name")
       .sort("-created");
     res.status(200).send(Tweets);
   } catch (error) {
