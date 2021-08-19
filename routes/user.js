@@ -22,6 +22,7 @@ router.post("/", async (req, res) => {
     res
       .header("x-auth-token", token)
       .header("acess-control-expose-headers", "x-auth-token")
+      .status(200)
       .send(_.pick(user, ["_id", "name", "email"]));
   } catch (ex) {
     res.status(400).send(ex);

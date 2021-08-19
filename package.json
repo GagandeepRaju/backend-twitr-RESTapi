@@ -4,7 +4,7 @@
   "description": "twitter clone REST api",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watchAll  --verbose"
   },
   "author": "Gagandeep Raju",
   "license": "ISC",
@@ -17,6 +17,10 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "mongoose": "^5.13.7"
+    "mongoose": "^5.13.7",
+    "supertest": "^6.1.6"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
   }
 }
