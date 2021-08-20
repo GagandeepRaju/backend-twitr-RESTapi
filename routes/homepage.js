@@ -9,11 +9,11 @@ const { Tweets } = require("../models/tweets");
 
 //add comment
 router.put("/addcomment", [auth], async (req, res) => {
-  const { tweetId, text } = req.body;
+  const { postId, text } = req.body;
   const postedBy = req.user._id;
   try {
     const tweet = await Tweets.findByIdAndUpdate(
-      tweetId,
+      postId,
       { $push: { comments: { text: text, postedBy: postedBy } } },
       { new: true }
     );
@@ -26,10 +26,10 @@ router.put("/addcomment", [auth], async (req, res) => {
 //delete comment
 router.put("/removecomment", [auth], async (req, res) => {
   //
-  const { tweetId, commentId } = req.body;
+  const { postId, commentId } = req.body;
   try {
     const tweet = await Tweets.findByIdAndUpdate(
-      tweetId,
+      postId,
       { $pull: { comments: { _id: commentId } } },
       { new: true }
     );
@@ -42,12 +42,12 @@ router.put("/removecomment", [auth], async (req, res) => {
 //add like
 router.put("/addlike/:userid", [auth, validateObjId], async (req, res) => {
   //
-  const tweetid = req.params.userid;
+  const postid = req.params.userid;
   const user = req.user._id;
 
   try {
     const tweet = await Tweets.findByIdAndUpdate(
-      tweetid,
+      postid,
       { $push: { likes: user } },
       { new: true }
     );
