@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+/*
+ A tweet schema postedBy key is used for foreign key of user, both in original tweet as well as comment section
+like key is used for foriegn key array of other users
+ */
+
 const PostSchema = new mongoose.Schema({
   text: { type: String, required: "Name is required" },
   photo: { type: String },

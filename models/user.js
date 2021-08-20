@@ -4,6 +4,10 @@ const config = require("config");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
+/*
+User Schema name, email, password is required keys
+*/
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -34,7 +38,9 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("User", userSchema);
-
+/*
+User validation based on their key name, types, length, required or not required information
+*/
 function validateUser(user) {
   const schema = Joi.object({
     name: Joi.string().min(5).max(50).required(),
@@ -45,7 +51,9 @@ function validateUser(user) {
   const result = schema.validate(user);
   return result;
 }
-
+/*
+Json web token for user validation and session maintenance purposes
+*/
 function generateAuthToken(user) {
   const token = jwt.sign(
     {
