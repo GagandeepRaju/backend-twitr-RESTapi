@@ -24,75 +24,67 @@ const server = app.listen(port, () => {
 });
 
 const io = require("socket.io")(server);
-// // Run when client connects
-// io.on("connection", (socket) => {
-//   console.log("We have a new connection ! ! !");
+// Run when client connects
+io.on("connection", (socket) => {
+  console.log("We have a new connection ! ! !");
 
-//   socket.on("joinRoom", ({ username, room }) => {
-//     const user = userJoin(socket.id, username, room);
+  socket.on("joinRoom", ({ username, room }) => {
+    let user = userJoin(socket.id, username, room);
 
-//     socket.join(user.room);
-//   });
-//   // Broadcast when a user connects
-//   // socket.broadcast
-//   //   .to(user.room)
-//   //   .emit(
-//   //     "message",
-//   //     formatMessage(botName, `${user.username} has joined the chat`)
-//   //   );
+    socket.emit("message", {
+      room: room,
+      msg: `${user.username} has joined the room`,
+    });
 
-//   // Send users and room info
-//   //   io.to(user.room).emit("roomUsers", {
-//   //     room: user.room,
-//   //     users: getRoomUsers(user.room),
-//   //   });
-//   // });
+    // Broadcast when a user connects
+    socket.broadcast
+      .to(user.room)
+      .emit(
+        "message",
+        formatMessage(botName, `${user.username} has joined the chat`)
+      );
+    socket.join(user.room);
+  });
 
-//   //listen for login
-//   socket.on("login", ({ email, password }) => {
-//     // console.log(email, password);
-//   });
+  // Send users and room info
+  //   io.to(user.room).emit("roomUsers", {
+  //     room: user.room,
+  //     users: getRoomUsers(user.room),
+  //   });
+  // });
 
-//   // Listen for chatMessage
-//   socket.on("chatMessage", ({ msg, room }) => {
-//     // const user = getCurrentUser(socket.id);
-//     const user = { username: "Gagandeep", room: "room1" };
-//     io.emit("chatMessage", { msg: msg, room: room });
-//     // io.to(user.room).emit("message", formatMessage(user.username, msg));
+  //listen for login
+  socket.on("login", ({ email, password }) => {
+    // console.log(email, password);
+  });
 
-//     socket.emit("message", { user: "admin", msg: "Welcome to the Room" });
-//     socket.broadcast
-//       .to(user.room)
-//       .emit("message", { user: "admin", msg: "Welcome to the Room" });
+  // Listen for chatMessage         //callback
+  socket.on("sendMessage", (message) => {
+    console.log(getCurrentUser(socket.id));
+    let user = getCurrentUser(socket.id);
+    console.log(user);
+    // io.to(user.room).emit("message", { user: user.name, text: message });
 
-//     socket.join(user.room);
-//   });
+    // callback();
+  });
 
-//   socket.on("sendMessage", (message, callback) => {
-//     const user = getUser(socket.id);
+  // Runs when client disconnects
+  socket.on("disconnect", () => {
+    let user = userLeave(socket.id);
+    console.log("User disconnected");
+    if (user) {
+      io.to(user.room).emit(
+        "message",
+        formatMessage(botName, `${user.username} has left the chat`)
+      );
 
-//     io.to(user.room).emit("message", { user: user.name, text: message });
-
-//     callback();
-//   });
-
-//   // Runs when client disconnects
-//   // socket.on("disconnect", () => {
-//   //   // const user = userLeave(socket.id);
-//   //   console.log("User disconnected");
-//   //   // if (user) {
-//   //   //   io.to(user.room).emit(
-//   //   //     "message",
-//   //   //     formatMessage(botName, `${user.username} has left the chat`)
-//   //   //   );
-
-//   //   // Send users and room info
-//   //   // io.to(user.room).emit("roomUsers", {
-//   //   //   room: user.room,
-//   //   //   users: getRoomUsers(user.room),
-//   //   // });
-//   //   // }
-//   // });
-// });
+      // Send users and room info
+      io.to(user.room).emit("roomUsers", {
+        room: user.room,
+        users: getRoomUsers(user.room),
+      });
+    }
+  });
+});
 
 module.exports = server;

@@ -74,11 +74,11 @@
     <div id="chatbox">
       <ul id="messages"></ul>
       <form id="form">
-        <input id="friend ID" type="text" placeholder="Enter ID" required autocomplete="off" />
+        <input id="room" type="text" placeholder="Enter Friend ID" required autocomplete="off" />
         <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" /><button>Send</button>
       </form>
+      <ul id="message"></ul>
     </div>
-    </form>
   </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
@@ -91,11 +91,13 @@
     "application/x-www-form-urlencoded";
   let users = document.getElementById('users');
   var messages = document.getElementById("messages");
+  var message = document.getElementById("message");
   var form = document.getElementById("form");
   var input = document.getElementById("input");
   let url = axios.defaults.baseURL;
   let userloggedin = true;
   let friends = [];
+  let allUsers = [];
   let body = {
     email: "",
     password: "",
@@ -127,7 +129,6 @@
       item.textContent = "_id: " + friend._id + " user: " + friend.name;
       users.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
-
     })
 
   }
@@ -145,7 +146,7 @@
     }
 
     // Emit message to server
-    socket.emit("chatMessage", {
+    socket.emit("sendMessage", {
       msg,
       room,
     });
@@ -156,12 +157,12 @@
     e.target.elements.msg.focus();
   });
 
-  socket.on("chatMessage", ({
+  socket.on("message", ({
     msg,
     room
   }) => {
     var item = document.createElement("li");
-    item.textContent = "message: " + msg + " room: " + room;
+    item.textContent = msg + " ID: " + room;
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
   });

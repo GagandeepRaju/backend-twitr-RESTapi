@@ -125,12 +125,9 @@
     let password = e.target.elements.password.value;
     email = email.trim();
     password = password.trim();
-    if (!email) {
-      return false;
-    }
-    if (!password) {
-      return false;
-    }
+    if (!email) return false;
+
+    if (!password) return false;
 
     body = {
       email: email,
@@ -138,11 +135,6 @@
     };
 
     getUser();
-    // Emit message to server
-    socket.emit("login", {
-      email,
-      password,
-    });
 
     // Clear input
     e.target.elements.email.value = "";
@@ -156,6 +148,11 @@
       token = res.headers['x-auth-token'];
       localStorage.setItem('_id', res.data._id)
       localStorage.setItem('token', token);
+      // Emit message to server
+      socket.emit("joinRoom", {
+        username: res.data.name,
+        room: res.data._id
+      });
       window.location.replace(`/api/chat`);
     } catch (error) {
       console.log(error);
