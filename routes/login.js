@@ -4,6 +4,13 @@ const _ = require("lodash");
 const { User, genToken } = require("../models/user");
 const express = require("express");
 const router = express.Router();
+const path = require("path");
+//login get
+router.get("/", async (req, res) => {
+  res.sendFile("index.html", {
+    root: path.join(__dirname, "../public/"),
+  });
+});
 
 // login request
 router.post("/", async (req, res) => {
@@ -22,7 +29,7 @@ router.post("/", async (req, res) => {
 
   const token = genToken(_.pick(user, ["_id", "name", "email"]));
   res.setHeader("x-auth-token", token);
-  res.sendStatus(200);
+  res.status(200).send(_.pick(user, ["_id", "name"]));
 });
 
 function validateUser(user) {

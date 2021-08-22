@@ -138,11 +138,10 @@ router.get("/usertofollow/:userid", [validateObjId], async (req, res) => {
   res.status(200).send(user);
 });
 
-//add following
-router.put("/addfollowing/:userid", [auth, validateObjId], async (req, res) => {
+// add following --middleware [auth, validateObjId]
+router.put("/addfollowing/:userid", async (req, res) => {
   const userid = req.params.userid;
   const myid = req.body._id;
-
   const { following } = await User.findById(myid).select("following");
   const findfollowing = following.filter((u) => u == userid);
   if (findfollowing.length > 0)
@@ -166,7 +165,7 @@ router.put("/addfollowing/:userid", [auth, validateObjId], async (req, res) => {
 
   if (!user) return res.status(404).send("User not found!");
 
-  res.status(200).send([user, fUser]);
+  res.status(200).send([user]);
 });
 
 //remove following
