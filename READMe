@@ -4,6 +4,8 @@ pull the repo from the git and npm i, all the dependecies from the package.json.
 
 I used "Postman" to test my RESTful API Endpoints
 
+** mongodb community endition database
+
 Endpoints: Create Account
 http://localhost:3000/api/signup/
 
@@ -28,6 +30,8 @@ For Example;
 
 Response headers should have x-auth-token, In case later on you need token for test routes
 Token example = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTFkNDdlMjU0YTczZDA4YThkODYxOTAiLCJuYW1lIjoiR2FnYW5kZWVwIFJhanUiLCJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJpYXQiOjE2Mjk0MTMxNDB9.xXAmnquzSolhZfZ6buUU5X5hhNsipJl8LN6ci056EqI
+
+Endpoints: http://localhost:3000/api/chat/
 
 example of id = 611d47e254a73d08a8d86190;
 Endpoint : http://localhost:3000/api/homepage/addtweet/:id
@@ -92,3 +96,19 @@ For Example;
     "postId":"611d47e254a73d08a8d86190",
      "user": "611d47e254a73d08a8d86190",
 }
+
+
+
+***********************************************************************************************
+
+Chat Interface 
+
+Endpoint: http://localhost:3000/api/login
+
+basic interface for login feature and chat interface demo
+
+ - use any account from database to login 
+ - ensure you have either followers or following in the profile you used to login in order to check the chat feature
+ - use the room id to send message to different users. 
+
+

@@ -22,7 +22,8 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`Server is runnong on ${port}`);
 });
-
+let userName = "";
+let userRoom = "";
 const io = require("socket.io")(server);
 // Run when client connects
 io.on("connection", (socket) => {
@@ -30,10 +31,11 @@ io.on("connection", (socket) => {
 
   socket.on("joinRoom", ({ username, room }) => {
     let user = userJoin(socket.id, username, room);
-
+    userName = username;
+    userName = room;
     socket.emit("message", {
       room: room,
-      msg: `${user.username} has joined the room`,
+      msg: `${user.userName} has joined the room`,
     });
 
     // Broadcast when a user connects
@@ -59,27 +61,41 @@ io.on("connection", (socket) => {
   });
 
   // Listen for chatMessage         //callback
-  socket.on("sendMessage", (message) => {
-    console.log(getCurrentUser(socket.id));
-    let user = getCurrentUser(socket.id);
-    console.log(user);
-    // io.to(user.room).emit("message", { user: user.name, text: message });
+  socket.on("sendMessage", ({ message, username, room }) => {
+    let user = userJoin(socket.id, username, room);
+    userName = username;
+    userRoom = room;
+    // console.log(getCurrentUser(socket.id));
+    user = getCurrentUser(socket.id);
+    io.to(room).emit("message", { user: room, text: message });
+    socket.join(user.room);
+    // callback();
+  });
 
+  // Listen for chatMessage         //callback
+  socket.on("message", ({ msg, room }) => {
+    // console.log(getCurrentUser(socket.id));
+    // user = getCurrentUser(socket.id);
+    userRoom = room;
+    io.to(room).emit("message", { user: room, text: msg });
+    socket.join(room);
     // callback();
   });
 
   // Runs when client disconnects
   socket.on("disconnect", () => {
-    let user = userLeave(socket.id);
+    let user = userJoin(socket.id, userName, userRoom);
+    console.log(userName);
+    user = userLeave(socket.id);
     console.log("User disconnected");
     if (user) {
       io.to(user.room).emit(
         "message",
-        formatMessage(botName, `${user.username} has left the chat`)
+        formatMessage(botName, `${userName} has left the chat`)
       );
 
       // Send users and room info
-      io.to(user.room).emit("roomUsers", {
+      io.to(userRoom).emit("roomUsers", {
         room: user.room,
         users: getRoomUsers(user.room),
       });

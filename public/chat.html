@@ -74,8 +74,9 @@
     <div id="chatbox">
       <ul id="messages"></ul>
       <form id="form">
-        <input id="room" type="text" placeholder="Enter Friend ID" required autocomplete="off" />
-        <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" /><button>Send</button>
+        <input id="room" type="text" placeholder="Enter Friend ID" value="" required autocomplete="off" />
+        <input id="msg" type="text" placeholder="Enter Message" value='' required
+          autocomplete="off" /><button>Send</button>
       </form>
       <ul id="message"></ul>
     </div>
@@ -89,7 +90,7 @@
   // axios.defaults.headers.common["Authorization"] = "token";
   axios.defaults.headers.post["Content-Type"] =
     "application/x-www-form-urlencoded";
-  let users = document.getElementById('users');
+  // let users = document.getElementById('users');
   var messages = document.getElementById("messages");
   var message = document.getElementById("message");
   var form = document.getElementById("form");
@@ -136,7 +137,6 @@
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     // Get message text
-
     let msg = e.target.elements.msg.value;
     let room = e.target.elements.room.value;
     msg = msg.trim();
@@ -146,7 +146,7 @@
     }
 
     // Emit message to server
-    socket.emit("sendMessage", {
+    socket.emit("message", {
       msg,
       room,
     });
@@ -158,12 +158,12 @@
   });
 
   socket.on("message", ({
-    msg,
-    room
+    user,
+    text
   }) => {
     var item = document.createElement("li");
-    item.textContent = msg + " ID: " + room;
-    messages.appendChild(item);
+    item.textContent = user + " ID: " + text;
+    message.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
   });
   // socket.on("message", function (msg) {

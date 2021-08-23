@@ -136,6 +136,12 @@
 
     getUser();
 
+    socket.emit("sendMessage", {
+      msg,
+      room,
+    });
+
+
     // Clear input
     e.target.elements.email.value = "";
     e.target.elements.password.value = "";
@@ -143,9 +149,11 @@
 
   async function getUser() {
     const json = JSON.stringify(body);
+    const users = [];
     try {
       const res = await axios.post("http://localhost:3000/api/login", body);
       token = res.headers['x-auth-token'];
+      localStorage.setItem('username', res.data.name);
       localStorage.setItem('_id', res.data._id)
       localStorage.setItem('token', token);
       // Emit message to server
@@ -153,6 +161,11 @@
         username: res.data.name,
         room: res.data._id
       });
+      users.push({
+        username: res.data.name,
+        room: res.data._id
+      });
+      localStorage.setItem('users', users);
       window.location.replace(`/api/chat`);
     } catch (error) {
       console.log(error);
